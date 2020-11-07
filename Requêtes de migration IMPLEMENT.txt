@@ -1,0 +1,266 @@
+--Divinite--
+INSERT INTO `divinite`(`Nom`)
+SELECT DISTINCT `Divinitéprotectrice` FROM `old_escales`;
+
+
+
+--Etape--
+	--création d'une table intermédiaire
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale1`,'1'
+FROM `old_escales`
+WHERE `old_escales`.`Escale1` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale2`,'2'
+FROM `old_escales`
+WHERE `old_escales`.`Escale2` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale3`,'3'
+FROM `old_escales`
+WHERE `old_escales`.`Escale3` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale4`,'4'
+FROM `old_escales`
+WHERE `old_escales`.`Escale4` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale5`,'5'
+FROM `old_escales`
+WHERE `old_escales`.`Escale5` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale6`,'6'
+FROM `old_escales`
+WHERE `old_escales`.`Escale6` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale7`,'7'
+FROM `old_escales`
+WHERE `old_escales`.`Escale7` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale8`,'8'
+FROM `old_escales`
+WHERE `old_escales`.`Escale8` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale9`,'9'
+FROM `old_escales`
+WHERE `old_escales`.`Escale9` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale10`,'10'
+FROM `old_escales`
+WHERE `old_escales`.`Escale10` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale11`,'11'
+FROM `old_escales`
+WHERE `old_escales`.`Escale11` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale12`,'12'
+FROM `old_escales`
+WHERE `old_escales`.`Escale12` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale13`,'13'
+FROM `old_escales`
+WHERE `old_escales`.`Escale13` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale14`,'14'
+FROM `old_escales`
+WHERE `old_escales`.`Escale14` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale15`,'15'
+FROM `old_escales`
+WHERE `old_escales`.`Escale15` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale16`,'16'
+FROM `old_escales`
+WHERE `old_escales`.`Escale16` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale17`,'17'
+FROM `old_escales`
+WHERE `old_escales`.`Escale17` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale18`,'18'
+FROM `old_escales`
+WHERE `old_escales`.`Escale18` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale19`,'19'
+FROM `old_escales`
+WHERE `old_escales`.`Escale19` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale20`,'20'
+FROM `old_escales`
+WHERE `old_escales`.`Escale20` != '';
+
+INSERT INTO `etape_intermediaire`(`Numero`,`Escale`,`Indice`)
+SELECT `pédition`,`Escale21`,'21'
+FROM `old_escales`
+WHERE `old_escales`.`Escale21` != '';
+
+
+
+	--insertion dans la table etape-
+
+INSERT INTO `etape`(`Indice_etape`,`ID_Ville`,`ID_Expedition`)
+SELECT `etape_intermediaire`.`Indice`,`ville`.`ID`,`expedition`.`ID`
+FROM 
+`etape_intermediaire`
+INNER JOIN 
+`ville`
+ON 
+`etape_intermediaire`.`Escale`=`ville`.`Nom`
+INNER JOIN
+`expedition`
+ON
+`etape_intermediaire`.`Numero`=`expedition`.`Numero_expedition`;
+
+
+
+
+--Expedition--
+INSERT INTO `expedition`(`Numero_expedition`,`ID_Divinite`,`ID_Navire`,`ID_Heros`)
+SELECT DISTINCT `old_escales`.`pédition`,`divinite`.`ID`,`navire`.`ID`,`heros`.`ID`
+FROM
+`old_equipages`
+INNER JOIN
+`old_escales`
+ON
+`old_equipages`.`pédition`=`old_escales`.`pédition`
+INNER JOIN
+`divinite`
+ON
+`divinite`.`Nom`=`old_escales`.`Divinitéprotectrice`
+INNER JOIN
+`navire`
+ON
+`navire`.`Nom`=`old_equipages`.`Bateau`
+INNER JOIN
+`heros`
+ON
+`heros`.`Nom`=`old_equipages`.`Nom_héros` AND `heros`.`Prenom`=`old_equipages`.`Prénom_héros`
+GROUP BY `old_escales`.`pédition`;
+
+
+
+--Heros--
+INSERT INTO `heros`(`Nom`,`Prenom`)
+SELECT DISTINCT `Nom_héros`,`Prénom_héros` FROM `old_equipages`;
+
+
+
+--Navire--
+INSERT INTO `navire`(`Nom`)
+SELECT DISTINCT `Bateau` FROM `old_equipages`;
+
+
+
+--Participe--
+INSERT INTO `participe`(`ID_Expedition`,`ID_Heros`)
+SELECT DISTINCT `expedition`.`ID`,`heros`.`ID` 
+FROM 
+`old_equipages` 
+INNER JOIN 
+`heros` 
+ON 
+`heros`.`Nom`=`old_equipages`.`Nom_héros` AND `heros`.`Prenom`=`old_equipages`.`Prénom_héros` 
+INNER JOIN 
+`expedition` 
+ON 
+`expedition`.`Numero_expedition`=`old_equipages`.`pédition`;
+
+
+SELECT * FROM `participe` ORDER BY `ID_Expedition` ASC;
+
+
+
+--Ville--
+	--création d'une table intermédiaire
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale1` FROM `old_escales` WHERE `old_escales`.`Escale1`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale2` FROM `old_escales` WHERE `old_escales`.`Escale2`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale3` FROM `old_escales` WHERE `old_escales`.`Escale3`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale4` FROM `old_escales` WHERE `old_escales`.`Escale4`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale5` FROM `old_escales` WHERE `old_escales`.`Escale5`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale6` FROM `old_escales` WHERE `old_escales`.`Escale6`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale7` FROM `old_escales` WHERE `old_escales`.`Escale7`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale8` FROM `old_escales` WHERE `old_escales`.`Escale8`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale9` FROM `old_escales` WHERE `old_escales`.`Escale9`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale10` FROM `old_escales` WHERE `old_escales`.`Escale10`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale11` FROM `old_escales` WHERE `old_escales`.`Escale11`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale12` FROM `old_escales` WHERE `old_escales`.`Escale12`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale13` FROM `old_escales` WHERE `old_escales`.`Escale13`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale14` FROM `old_escales` WHERE `old_escales`.`Escale14`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale15` FROM `old_escales` WHERE `old_escales`.`Escale15`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale16` FROM `old_escales` WHERE `old_escales`.`Escale16`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale17` FROM `old_escales` WHERE `old_escales`.`Escale17`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale18` FROM `old_escales` WHERE `old_escales`.`Escale18`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale19` FROM `old_escales` WHERE `old_escales`.`Escale19`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale20` FROM `old_escales` WHERE `old_escales`.`Escale20`!= '';
+
+INSERT INTO `ville_intermediaire`(`Escales`)
+SELECT `Escale21` FROM `old_escales` WHERE `old_escales`.`Escale21`!= '';
+
+
+
+	--déplacement dans la table ville
+
+INSERT INTO `ville`(`Nom`)
+SELECT DISTINCT `Escales` FROM `ville_intermediaire`;
+
+
+
+

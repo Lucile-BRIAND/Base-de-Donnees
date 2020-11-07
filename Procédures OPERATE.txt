@@ -1,0 +1,79 @@
+			**REQUETES OPERATE**
+
+	--1.V : Le ou les dieu(x) ayant protégé le plus d'expéditions--
+
+BEGIN
+
+SELECT `divinite`.`Nom`, nombre_expeditions
+FROM `divinite`
+INNER JOIN
+	(SELECT `expedition`.`ID_Divinite`, COUNT(`expedition`.`ID`) AS nombre_expeditions
+	FROM `expedition`
+	GROUP BY `expedition`.`ID_Divinite`) niveau1souhait5
+ON `niveau1souhait5`.`ID_Divinite` = `divinite`.`ID`
+ORDER BY nombre_expeditions DESC
+LIMIT 1;
+
+END
+
+
+
+
+
+	--1.XVI : La moyenne d'expéditions par Divinité--
+
+BEGIN
+
+SELECT AVG(nombre_expeditions)
+FROM
+	(SELECT `expedition`.`ID_Divinite`, COUNT(`expedition`.`ID`) AS nombre_expeditions
+	FROM `expedition`
+	GROUP BY `expedition`.`ID_Divinite`) niveau1souhait16;
+
+END
+
+
+
+
+
+	--2.XV : La moyenne des villes traversées par une expédition--
+
+BEGIN
+
+SELECT AVG(nombre_villes)
+FROM
+    (SELECT `expedition`.`Numero_expedition`, COUNT(`etape`.`ID_Ville`) AS nombre_villes
+    FROM `etape`
+    INNER JOIN 
+    `expedition` 
+    ON `etape`.`ID_Expedition` = `expedition`.`ID`
+    GROUP BY `expedition`.`Numero_expedition`) niveau2souhait15;
+
+END
+
+
+
+
+
+	--2.XXII : Le bateau ayant transporté le moins de monde--
+
+BEGIN
+
+SELECT bateau, capacite
+FROM
+    (SELECT `navire`.`Nom` AS bateau, COUNT(`participe`.`ID_Heros`) AS capacite
+	FROM `navire`
+	INNER JOIN
+	`expedition`
+	ON `expedition`.`ID_Navire` = `navire`.`ID`
+	INNER JOIN `participe`
+	ON `participe`.`ID_Expedition` = `expedition`.`ID`
+	GROUP BY `expedition`.`ID_Navire`) niveau2souhait22
+WHERE capacite IN
+	(SELECT MIN(capacite) FROM (SELECT `navire`.`Nom` AS bateau, COUNT(`participe`.`ID_Heros`) AS capacite
+	FROM `navire`
+	INNER JOIN `expedition` ON `expedition`.`ID_Navire` = `navire`.`ID`
+	INNER JOIN `participe` ON `participe`.`ID_Expedition` = `expedition`.`ID`
+	GROUP BY `expedition`.`ID_Navire`) niveau2souhait22bis);
+
+END
